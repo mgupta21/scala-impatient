@@ -1,7 +1,7 @@
 /**
   * Created by mgupta on 1/28/17.
   */
-object Sheet1 extends App {
+object Sheet extends App {
 
   println("Welcome to the Scala worksheet")
 
@@ -24,15 +24,23 @@ object Sheet1 extends App {
   1.to(10)
   1 to 10
 
-  "Hello".intersect("World")  // Yields "lo"
+  "Hello".intersect("World") // Yields "lo"
 
-  val x:BigInt = 12345678
-  x*x*x*x
+  val x: BigInt = 12345678
+  x * x * x * x
 
   val result = 1.+(10)
   result
 
   // ++, -- operators are not supported
+
+  // INVOKE FUNCTIONS AND METHODS
+
+  // Methods without parameters usually do not use (), () is only required for mutators
+  "Hello".length
+
+  "Hello"(4) // Yields 'o'
+  "Hello".apply(4) // Same as "Hello"(4)
 
 
 }
