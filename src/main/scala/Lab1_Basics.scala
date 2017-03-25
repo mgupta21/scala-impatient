@@ -1,7 +1,7 @@
 /**
   * Created by mgupta on 1/31/17.
   */
-object Lab1 extends App {
+object Lab1_Basics extends App {
 
   val a = 6 * 7
   a

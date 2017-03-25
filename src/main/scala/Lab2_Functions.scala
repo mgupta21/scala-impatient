@@ -1,7 +1,7 @@
 /**
   * Created by mgupta on 2/1/17.
   */
-object Lab2 extends App {
+object Lab2_Functions extends App {
 
   def vowels(s: String) = {
     var result = ""
