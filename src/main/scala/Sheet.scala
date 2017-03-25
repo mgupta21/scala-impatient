@@ -23,7 +23,8 @@ object Sheet extends App {
   1.to(10)
   1 to 10
 
-  "Hello".intersect("World") // Yields "lo"
+  "Hello".intersect("World")
+  // Yields "lo"
   // Type of () is unit, Unit is equivalent to void in java but has one value denoted ()
   val y = () // Unit = ()
   x * x * x * x
@@ -39,7 +40,8 @@ object Sheet extends App {
   "Hello".length
 
   "Hello" (4) // Yields 'o'
-  "Hello".apply(4) // Same as "Hello"(4)
+  "Hello".apply(4)
+  // Same as "Hello"(4)
   val distance = {
     val dx = x0 - x1
     val dy = y0 - y1
@@ -50,7 +52,8 @@ object Sheet extends App {
   if (z > 0) "something" else -1 // Type is Any, Any = something
 
   z = -1
-  if (z > 0) "something" // Any = ()
+  if (z > 0) "something"
+  // Any = ()
   var greeting: String = null
   var count: Int = 2
   var z = 1
@@ -131,6 +134,83 @@ object Sheet extends App {
   }
 
   println(recSum(1, 2, 3))
+
+  // ARRAYS
+
+  // Use square brackets for the type
+  val nums = Array[Int](10)
+  // Ten integers all initialized to 0
+  // Initialize Array during declaration
+  val a = Array("Hello", "World") // Type is inferred
+  a(0) = "Goodbye" // Able to reassign val ?
+
+  // Traverse
+  for (e <- a) println(e)
+  for (i <- 0 until a.length) println(a(i))
+
+  val xN = new Array[Int](10)
+  for (i <- 0 until xN.length) xN(i) = i * i
+  for (e <- xN) println(e)
+
+  // Use ArrayBuffer as analog for ArrayList in java
+  import scala.collection.mutable.ArrayBuffer
+
+  val a1 = new ArrayBuffer[Int]()
+  val b = ArrayBuffer("Mary", "had", "a", "little", "lamb")
+  b(0) = "Stacy"
+  b += "its" // append element to end
+  b += ("fleece", "was", "white") // append collection to end
+  b ++= Array("as", "snow") // append Array to end
+  println(b)
+
+  b.remove(3)
+  println(b)
+
+  b.insert(3, "small")
+  println(b)
+
+  b.trimEnd(2) // Trims last 2 elements
+  println(b)
+
+  val a2 = Array(2, 3, 5, 7, 11)
+  val a4 = for (elem <- a2) yield elem * 2
+  println(a4.mkString("[", ", ", "]")) // 4 6 10 14 22
+
+  Array(1, 7, 2, 9).sum // 19
+  Array(1, 7, 2, 9).reverse // Array(9, 2, 7, 1)
+  ArrayBuffer("Mary", "had", "a", "little", "lamb").max // "little"
+  ArrayBuffer(1, 7, 2, 9).sorted // ArrayBuffer(1, 2, 7, 9)
+
+  // MAPS
+  // immutable map, by default scala maps are immutable
+  val scores = Map("Alice" -> 10, "Bob" -> 3, "Cindy" -> 8)
+  val scores3 = scores + ("John" -> 2)
+  // scores3 immutable map
+  var scores4 = Map("Alice" -> 10, "Bob" -> 3, "Cindy" -> 8)
+  scores4 = scores4 + ("Peter" -> 9)
+
+
+  val scores2 = scala.collection.mutable.Map("Alice" -> 20)
+  scores2("Alice") = 7
+  scores2 += ("Bpb" -> 3, "Fred" -> 7)
+  scores2 -= "Alice"
+  "Alice" -> 20
+  // pair
+  val bobScore = scores("Bob") // 3
+
+  scores("Fred") // NoSuchElementException
+  scores.getOrElse("Fred", 0) // 0
+
+  for ((k, v) <- scores) println(k + "has value " + v)
+  val revScores = for ((k, v) <- scores) yield (v, k) //immutable map
+
+  scores.keySet
+  scores.values
+
+  // TUPLE : Aggregates values of different types
+  val t = (1, 3.14, "Fred")
+  val first = t._1
+  val (_, second, third) = t // second = 3.14, third = "Fred"
 
 
 }

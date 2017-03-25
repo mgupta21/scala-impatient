@@ -39,6 +39,7 @@ object Lab2 extends App {
 
   def isVowel(ch: Char, vowelsChars: String) = vowelsChars.contains(ch)
 
-  println(vowels2("Übeltätergehör", "aeiouüäö"))
+  println(vowels2("Übeltätergehör", "aeiouüäö")) // üeäeeö
+  println(vowels2("Übeltätergehör", "aeiouüäö", false)) // eäeeö
 
 }
