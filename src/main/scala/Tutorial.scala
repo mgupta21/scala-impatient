@@ -209,8 +209,8 @@ object Tutorial extends App {
   scores.values
 
   // To implement "function call" notation, provide an apply method
-  scores.apply("bob") // same as
-  scores("bob")
+  //scores.apply("bob") // same as
+  //scores("bob")
 
   // TUPLE : Aggregates values of different types
   val t = (1, 3.14, "Fred")
@@ -282,5 +282,89 @@ object Tutorial extends App {
   // With companion object client doesn't need to call new
   //val p3 = Point(3, 4) * 3
 
+
+  // LAB 5
+  // PACKAGES
+
+  //import java.awt.{Color, Font} // import 2 classes
+  //import java.util.{HashMap => JavaHashMap} // alias
+  //import java.util.{HashMap => _,_} // hide a class
+
+  // Inheritance
+  class Person(name: String, age: Int)
+
+  // super class construction
+  class Employee(name: String, age: Int, val salary: Double) extends Person(name, age)
+
+  class Manager(name: String, age: Int, salary: Double, val level: String) extends Employee(name, age, salary)
+
+  val manager = new Manager("", 0, 0, "")
+  manager.isInstanceOf[Manager] // like manager instanceOf Manager
+  manager.asInstanceOf[Manager] // like (Manager) manager
+  manager.getClass == classOf[Manager]
+
+  // like Manager.class
+
+  // Traits - superficially similar to java interface
+  // A class can extend multiple traits
+  class Employee2(name: String, age: Int, val salary: Double) extends Person(name, age) with Cloneable with Serializable
+
+  // Traits can have abstract and concrete fields
+  // Traits cannot have construction parameters. Technically, that's the only difference between class and trait
+
+  // Use traits to "mix in" small amounts of functionality
+  // can also mix into objects
+
+  trait Logged {
+    def log(msg: String) {}
+  }
+
+  trait ConsoleLogger extends Logged {
+    override def log(msg: String) {
+      println(msg)
+    }
+  }
+
+  trait TimestampLogger extends Logged {
+    override def log(msg: String): Unit = {
+      super.log(new java.util.Date() + " " + msg)
+    }
+  }
+
+  trait ShortLogger extends Logged {
+    val maxLength = 15;
+
+    override def log(msg: String): Unit = {
+      super.log(if (msg.length < maxLength) msg
+      else msg.substring(0, maxLength - 3) + ".....")
+    }
+  }
+
+  class SavingsAccount extends Logged {
+    private var balance: Double = 0
+
+    def withdraw(amount: Double): Unit = {
+      if (amount > balance) log("Insufficient Balance")
+      else balance -= amount;
+    }
+
+  }
+
+  val acc = new SavingsAccount with ConsoleLogger
+
+  // traits are applied in reverse order
+  val acc2 = new SavingsAccount with ConsoleLogger with TimestampLogger with ShortLogger
+
+  acc.withdraw(1000)
+  acc2.withdraw(1000)
+
+  val acc3 = new SavingsAccount with ConsoleLogger with TimestampLogger with ShortLogger {
+    override val maxLength = 20
+  }
+
+  acc3.withdraw(1000)
+
+  val acc4 = new SavingsAccount with ShortLogger with TimestampLogger with ConsoleLogger // order is important
+  acc4.withdraw(1000)
 
 }
