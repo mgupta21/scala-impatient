@@ -3,7 +3,7 @@ import scala.math._
 /**
   * Created by mgupta on 1/28/17.
   */
-object Sheet extends App {
+object Tutorial extends App {
 
   println("Welcome to the Scala worksheet")
 
@@ -135,6 +135,7 @@ object Sheet extends App {
 
   println(recSum(1, 2, 3))
 
+  // LAB 3
   // ARRAYS
 
   // Use square brackets for the type
@@ -198,19 +199,88 @@ object Sheet extends App {
   // pair
   val bobScore = scores("Bob") // 3
 
-  scores("Fred") // NoSuchElementException
+  //scores("Fred") // NoSuchElementException
   scores.getOrElse("Fred", 0) // 0
 
-  for ((k, v) <- scores) println(k + "has value " + v)
+  for ((k, v) <- scores) println(k + " has value " + v)
   val revScores = for ((k, v) <- scores) yield (v, k) //immutable map
 
   scores.keySet
   scores.values
 
+  // To implement "function call" notation, provide an apply method
+  scores.apply("bob") // same as
+  scores("bob")
+
   // TUPLE : Aggregates values of different types
   val t = (1, 3.14, "Fred")
   val first = t._1
-  val (_, second, third) = t // second = 3.14, third = "Fred"
+  val (_, second, third) = t
+
+  // second = 3.14, third = "Fred"
+
+  // LAB 4
+  // CLASSES
+
+  // if fields are val, they cannot be mutated. When defined fields automatically gives rise to a constructor
+  class Point(val x: Double = 0, val y: Double = 0) {
+    def move(dx: Double, dy: Double) = new Point(x + dx, y + dy)
+
+    def distanceFromOrigin = Math.sqrt(x * x + y * y)
+
+    // Identifiers(method names etc.) can be symbols
+    def *(factor: Double) = new Point(x * factor, y * factor)
+
+    override def toString = f"(${x}, ${y})" //f represents formatter
+
+  }
+
+  var p = new Point(3, 4);
+  p.x
+  p.y
+
+  // p.x = 13 // cannot mutate val
+
+  p.distanceFromOrigin // no parenthesis required in method call
+  p.*(2)
+  p * 2 // same as p.*(2)
+  p = p.move(10, 20) // returns new point, not mutable
+  println(p)
+
+  var p2 = new Point(); // Creates with x, y with default value, if default values were not provided then empty constructor cannot be invoked
+
+  1 to 10 map (3 * _) filter (_ % 5 == 2)
+  1.to(10).map(3 * _).filter(_ % 5 == 2)
+
+  // Use object for singletons, static methods
+  object Accounts {
+    private var lastNumber = 0
+
+    def newUniqueNumber() = {
+      lastNumber += 1;
+      lastNumber
+    }
+  }
+
+  println(Accounts.newUniqueNumber()) // 1
+  println(Accounts.newUniqueNumber())
+
+  // 2
+
+  // An Object extending App is like main in java
+  /*object MyApp extends App {
+    println(f"Hello, ${args(0)}")
+  }*/
+
+  // "Companion object" of class = object with the same name in the same source file
+  // Have access to private features of each other
+  // Usage : common to have apply in companion object for factory methods
+  object Point {
+    def apply(x: Double, y: Double) = new Point(x, y)
+  }
+
+  // With companion object client doesn't need to call new
+  //val p3 = Point(3, 4) * 3
 
 
 }
