@@ -24,4 +24,49 @@ after.isBefore(time)
 
 //val invalid = new Time(24, 0)
 
-val noon = new Time(12)
+val noon1 = new Time(12)
+
+
+class Time2(h: Int, m: Int) {
+  private var minutesSinceMidNight = h * 60 + m;
+
+  if (minutesSinceMidNight < 0 || minutesSinceMidNight > 24 * 60) {
+    throw new IllegalArgumentException("Invalid time")
+  }
+
+  def <(other: Time2) = this - other < 0
+
+  def -(other: Time2) = minutesSinceMidNight - other.minutesSinceMidNight
+
+
+  def hours = minutesSinceMidNight / 60;
+
+  def minutes = minutesSinceMidNight % 60;
+
+  def minutes_=(newValue: Int) {
+    if (newValue < 0 || newValue >= 60) {
+      throw new IllegalArgumentException("Invalid Minutes")
+    }
+    minutesSinceMidNight = h * 60 + newValue
+  }
+
+  override def toString: String = f"${hours}:${minutes}%02d"
+}
+
+object Time2 {
+  def apply(h: Int, m: Int) = new Time2(h, m)
+
+  def apply(h: Int) = new Time2(h, 0)
+}
+
+val noon = new Time2(12, 0)
+noon.hours
+noon.minutes
+noon.minutes = 45
+noon
+
+val morning = Time2(10)
+morning < noon
+noon - morning
+
+//noon.minutes = -999
