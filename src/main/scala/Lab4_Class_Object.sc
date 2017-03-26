@@ -61,11 +61,15 @@ object Time2 {
 
 val noon = new Time2(12, 0)
 noon.hours
+
+// Uniform Access
 noon.minutes
 noon.minutes = 45
+
 noon
 
-val morning = Time2(10)
+val morning = Time2(10) // Using companion
+// operators
 morning < noon
 noon - morning
 
