@@ -157,20 +157,20 @@ object Tutorial extends App {
   import scala.collection.mutable.ArrayBuffer
 
   val a1 = new ArrayBuffer[Int]()
-  val b = ArrayBuffer("Mary", "had", "a", "little", "lamb")
-  b(0) = "Stacy"
-  b += "its" // append element to end
-  b += ("fleece", "was", "white") // append collection to end
-  b ++= Array("as", "snow") // append Array to end
+  var bX = ArrayBuffer("Mary", "had", "a", "little", "lamb")
+  bX(0) = "Stacy"
+  bX += "its" // append element to end
+  bX += ("fleece", "was", "white") // append collection to end
+  bX ++= Array("as", "snow") // append Array to end
   println(b)
 
-  b.remove(3)
+  bX.remove(3)
   println(b)
 
-  b.insert(3, "small")
+  bX.insert(3, "small")
   println(b)
 
-  b.trimEnd(2) // Trims last 2 elements
+  bX.trimEnd(2) // Trims last 2 elements
   println(b)
 
   val a2 = Array(2, 3, 5, 7, 11)
@@ -252,8 +252,12 @@ object Tutorial extends App {
   1 to 10 map (3 * _) filter (_ % 5 == 2)
   1.to(10).map(3 * _).filter(_ % 5 == 2)
 
-  // Use object for singletons, static methods
-  object Accounts {
+  // Objects
+  // In scala use object for singletons, static methods or fields, no static keyword scala.
+  // Constructor of an object is executed when the object is first used.
+  // Objects can have all features of a class, and can extend a Class or Trait
+
+  object Account {
     private var lastNumber = 0
 
     def newUniqueNumber() = {
@@ -262,8 +266,8 @@ object Tutorial extends App {
     }
   }
 
-  println(Accounts.newUniqueNumber()) // 1
-  println(Accounts.newUniqueNumber())
+  println(Account.newUniqueNumber()) // 1 // method is invoked like static methods in java
+  println(Account.newUniqueNumber())
 
   // 2
 
@@ -272,15 +276,40 @@ object Tutorial extends App {
     println(f"Hello, ${args(0)}")
   }*/
 
+  // In java a class can have both instance and static methods. In scala, this can be achieved by having a class adn a companion object
   // "Companion object" of class = object with the same name in the same source file
-  // Have access to private features of each other
-  // Usage : common to have apply in companion object for factory methods
+  // Have access to private features of each other, must be located in the same file
+
+  class Account {
+    val id = Account.newUniqueNumber()
+    private var balance = 0.0
+
+    def deposit(amount: Double) {
+      balance += amount;
+    }
+  }
+
+  // Usage : common to have apply in companion object. Typically apply method returns an object of the companion class
   object Point {
     def apply(x: Double, y: Double) = new Point(x, y)
   }
 
   // With companion object client doesn't need to call new
   //val p3 = Point(3, 4) * 3
+
+  // scala does not have a enumeration type, use Enumeration helper class to produce enumerations
+  object TrafficLightColor extends Enumeration {
+    val Red, Yellow, Green = Value
+  }
+
+  object TrafficColor extends Enumeration {
+    val Red = Value(0, "Stop") // ID 0, Name "Stop"
+    val Yellow = Value(10) // Name = "Yellow"
+    val Green = Value("Go") // ID 11
+  }
+
+  for (c <- TrafficColor.values) println(s"${c.id}:$c")
+  for (c <- TrafficLightColor.values) println(s"${c.id}:$c")
 
 
   // LAB 5
@@ -292,6 +321,8 @@ object Tutorial extends App {
 
   // Inheritance
   class Person(name: String, age: Int)
+  // As in java a class can be declared final so that it is not extended. Methods can be declared final as well so they are not overriden.
+  // In scala always use override keywork
 
   // super class construction
   class Employee(name: String, age: Int, val salary: Double) extends Person(name, age)
@@ -366,5 +397,72 @@ object Tutorial extends App {
 
   val acc4 = new SavingsAccount with ShortLogger with TimestampLogger with ConsoleLogger // order is important
   acc4.withdraw(1000)
+
+  // LAB 6
+  // FUNCTIONAL PROGRAMMING
+
+  var num = 3.14
+  var fun = ceil _
+
+  // Call
+  fun(num) // 4.0
+
+  // Share
+  Array(3.14, 1.42, 2.0).map(fun) // Array(4.0, 2.0, 2.0)
+  // Anonymous function
+  Array(3.14, 1.42, 2.0).map((x: Double) => 3 * x) // Array(9.42, 4.26, 6.0)
+  Array(3.14, 1.42, 2.0).map(x => 3 * x) // same as
+  Array(3.14, 1.42, 2.0).map(3 * _) // same as
+
+  (1 to 9).map(0.1 * _) // 0.1, 0.2, ...., 0.9
+  (1 to 9).map(_ % 2 == 0) // 2, 4, 6, 8
+  (1 to 9).reduceLeft(_ * _) // (((1 * 2) * 3) * 4)....
+
+  (1 to 9).filter(_ % 2 == 0).map(0.1 * _)
+  // same as
+  for (n <- 1 to 9 if n % 2 == 0) yield 0.1 * n
+
+  // Some functions have functions parameters
+  def valueAtOneQuarter(f: (Double) => Double) = f(0.25)
+
+  valueAtOneQuarter(ceil _) // 1.0
+  valueAtOneQuarter(sqrt _) // 0.5
+
+  // A function can produce another function
+  def mulBy(factor: Double) = (x: Double) => factor * x
+
+  mulBy(3) // (x: Double) => 3 * x
+
+  val quintuple = mulBy(5)
+  quintuple(20) // 100
+
+  // currying = turning a function that takes two arguments into a function that takes one argument.
+  // That function returns a function that consumes the second argument
+
+  def mul(x: Int, y: Int) = x * y
+
+  def mulOneAtATime(x: Int) = (y: Int) => x * y
+
+  // same as
+  def mulOneAtATime2(x: Int)(y: Int) = x * y
+
+  mulOneAtATime(3)(14) // 42
+
+  val aS = Array("Hello", "World")
+  val b = Array("hello", "world")
+  // currying
+  aS.corresponds(b)(_.equalsIgnoreCase(_)) // true
+
+  // Control Abstractions
+  def runInThread(block: () => Unit) = {
+    new Thread {
+      override def run() {
+        block()
+      }
+    }.start()
+  }
+
+  runInThread { () => println("Hi"); Thread.sleep(10000); println("Bye") }
+
 
 }
