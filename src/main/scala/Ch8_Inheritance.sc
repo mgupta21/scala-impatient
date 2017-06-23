@@ -1,46 +1,57 @@
-// As in Java, you can declare a class final so that it cannot be extended.
-// You can also declare individual methods or fields final so that they cannot be overridden
+// Inheritance
 
+// As in java a class can be declared final so that it is not extended.
+// Methods can be declared final as well so they are not overridden.
 class Person {
-  //  You must use the override modifier when you override a method that isn’t abstract.
-  var name = "person"
+  val name = "person";
 
+  // In Scala, use 'override' modifier when you override a method that isn't abstract
   override def toString = s"${getClass.getName}[name=$name]"
-
 }
-
-var person = new Person
 
 class Employee extends Person {
-
-  var salary = 100;
+  val salary = 1000
 
   override def toString = s"${super.toString}[salary=$salary]"
-
 }
 
-var employee = new Employee
+class Manager extends Employee
 
-if (employee.isInstanceOf[Person]) {
-  val person2 = employee.asInstanceOf[Person] // person2 has type Person
-  // person.asInstanceOf[Employee] // Class cast exception
-  var emp2 = person2.asInstanceOf[Employee]
-  if (person2.getClass == classOf[Employee]) {
-    println("Is employee class")
-  }
+val e = new Employee
+val p = new Person
+val m = new Manager
+e.toString // String = Employee[name=person][salary=1000]
+
+// Use isInstanceOf to test whether an object belongs to a given class
+// Use asInstanceOf to convert a reference to a subclass
+p.isInstanceOf[Employee] // false
+e.isInstanceOf[Employee] // true
+m.isInstanceOf[Employee] // true
+
+p.getClass == classOf[Employee] // No
+e.getClass == classOf[Employee] // Yes
+m.getClass == classOf[Employee] // No
+
+if (m.isInstanceOf[Employee]) {
+  val s = m.asInstanceOf[Employee] // s has type Employee
 }
+
+// As in Java, you can declare any field or method as protected, which can be accessed in subclass
+
+// A class has one primary constructor and any number of auxiliary constructors
+// All auxiliary constructors must start with call to a preceding auxiliary constructor or the primary constructor.
+// As a consequence, an auxiliary constructor eventually call primary constructor of subclass and only primary constructor call superclass constructor.
+
+class Person2(name: String, age: Int)
+
+// As primary constructor is intertwined with the class def, so is call to super class constructor
+class Employee2(name: String, age: Int, val salary: Double) extends Person2(name, age)
 
 // Can also use pattern matching for type check and casts
-person match {
+p match {
   case s: Employee => println("Employee")
   case _ => println("Not Employee")
 }
-
-// A field or method can be declared protected. Such a member is accessible from any class but not from other locations
-// Unlike in java, a protected member is not visible throughout the package to which the class belongs.
-// A class has one primary constructor and any number of auxiliary constructors, and that
-// all auxiliary constructors must start with a call to a preceding auxiliary constructor or primary constructor
-// In consequence, the auxiliary constructors can never invoke superclass constructor directly. Only primary constructor can call a super class constructor
 
 class Parent(val name: String, val age: Int)
 
