@@ -3,7 +3,7 @@ import scala.math._
 /**
   * Created by mgupta on 1/28/17.
   */
-object Tutorial extends App {
+object Basics extends App {
 
   println("Welcome to the Scala worksheet")
 
